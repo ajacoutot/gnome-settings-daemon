@@ -76,7 +76,6 @@ _helper_unregister (GError **error)
 	g_autoptr(GVariantBuilder) proxy_options = NULL;
 	g_autoptr(GVariant) res = NULL;
 
-	g_debug ("unregistering");
 	proxy = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SYSTEM,
 					       G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES |
 					       G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
@@ -230,6 +229,7 @@ main (int argc, char *argv[])
 		return G_IO_ERROR_INVALID_DATA;
 	}
 	if (g_strcmp0 (kind, "unregister") == 0) {
+	        g_debug ("unregistering");
 		if (!_helper_unregister (&error)) {
 			g_printerr ("Failed to Unregister: %s\n", error->message);
 			return G_IO_ERROR_NOT_INITIALIZED;
@@ -299,6 +299,9 @@ main (int argc, char *argv[])
 			return G_IO_ERROR_INVALID_DATA;
 		}
 
+		g_debug ("trying to unregister in case machine is already registered");
+		_helper_unregister (NULL);
+
 		g_debug ("registering using activation key");
 		activation_keys = g_strsplit (activation_key, ",", -1);
 		res = g_dbus_proxy_call_sync (proxy,
@@ -322,7 +325,6 @@ main (int argc, char *argv[])
 		g_autoptr(GError) error_local = NULL;
 		g_autoptr(GVariant) res = NULL;
 
-		g_debug ("registering using username and password");
 		if (username == NULL) {
 			g_printerr ("Required --username\n");
 			return G_IO_ERROR_INVALID_DATA;
@@ -335,6 +337,11 @@ main (int argc, char *argv[])
 			g_printerr ("Required --organisation\n");
 			return G_IO_ERROR_INVALID_DATA;
 		}
+
+		g_debug ("trying to unregister in case machine is already registered");
+		_helper_unregister (NULL);
+
+		g_debug ("registering using username and password");
 		res = g_dbus_proxy_call_sync (proxy,
 					      "Register",
 					      g_variant_new ("(sssa{ss}a{ss}s)",
