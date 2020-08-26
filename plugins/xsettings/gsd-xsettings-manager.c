@@ -466,8 +466,8 @@ static FixedEntry fixed_entries [] = {
 };
 
 static TranslationEntry translations [] = {
-        { "org.gnome.settings-daemon.peripherals.mouse", "double-click",   "Net/DoubleClickTime",  translate_int_int },
-        { "org.gnome.settings-daemon.peripherals.mouse", "drag-threshold", "Net/DndDragThreshold", translate_int_int },
+        { "org.gnome.desktop.peripherals.mouse", "double-click",   "Net/DoubleClickTime",  translate_int_int },
+        { "org.gnome.desktop.peripherals.mouse", "drag-threshold", "Net/DndDragThreshold", translate_int_int },
 
         { "org.gnome.desktop.background", "show-desktop-icons",    "Gtk/ShellShowsDesktop",   translate_bool_int },
 
